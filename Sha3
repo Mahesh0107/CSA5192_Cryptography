@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdint.h>
+
+#define STATE_SIZE 25
+#define RATE 1024
+
+typedef uint64_t state[STATE_SIZE];
+
+void sha3_permutation(state s) {
+    // Simplified permutation function
+    // (This is not the actual SHA-3 permutation, just a placeholder)
+    // Your permutation logic here
+}
+
+int allNonzeroLanes(state s) {
+    for (int i = 0; i < STATE_SIZE; i++) {
+        if (s[i] == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int main() {
+    state internal_state = {0}; // Initialize all lanes to zero
+    int round = 0;
+
+    while (!allNonzeroLanes(internal_state)) {
+        sha3_permutation(internal_state);
+        round++;
+    }
+
+    printf("All lanes have at least one nonzero bit after %d rounds.\n", round);
+
+    return 0;
+}
