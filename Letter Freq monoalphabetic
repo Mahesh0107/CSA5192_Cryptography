@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define ALPHABET_SIZE 26
+
+void calculateLetterFrequency(char text[], float frequency[]) {
+    int totalLetters = 0;
+
+    for (int i = 0; text[i] != '\0'; i++) {
+        char currentChar = text[i];
+
+        if (isalpha(currentChar)) {
+            int index = tolower(currentChar) - 'a';
+            frequency[index]++;
+            totalLetters++;
+        }
+    }
+
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        frequency[i] /= totalLetters;
+    }
+}
+
+void monoalphabeticSubstitutionAttack(char ciphertext[], int topPlaintexts) {
+    float englishFrequency[ALPHABET_SIZE] = { 0.0817, 0.0149, 0.0278, 0.0425, 0.1270, 0.0223, 0.0202, 0.0609, 0.0697, 0.0015,
+                                              0.0077, 0.0402, 0.0241, 0.0675, 0.0751, 0.0193, 0.0010, 0.0599, 0.0633, 0.0906,
+                                              0.0276, 0.0098, 0.0236, 0.0015, 0.0197, 0.0007 };
+
+    int ciphertextLength = strlen(ciphertext);
+
+    float frequency[ALPHABET_SIZE] = { 0 };
+    calculateLetterFrequency(ciphertext, frequency);
+
+    char decryptionMap[ALPHABET_SIZE];
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        int maxIndex = 0;
+
+        for (int j = 1; j < ALPHABET_SIZE; j++) {
+            if (frequency[j] > frequency[maxIndex]) {
+                maxIndex = j;
+            }
+        }
+
+        decryptionMap[maxIndex] = 'a' + i;
+        frequency[maxIndex] = -1;
+    }
+
+    printf("Top %d possible plaintexts:\n", topPlaintexts);
+    for (int i = 0; i < topPlaintexts; i++) {
+        for (int j = 0; j < ciphertextLength; j++) {
+            char currentChar = ciphertext[j];
+
+            if (isalpha(currentChar)) {
+                char decryptedChar = decryptionMap[tolower(currentChar) - 'a'];
+
+                if (isupper(currentChar)) {
+                    decryptedChar = toupper(decryptedChar);
+                }
+
+                printf("%c", decryptedChar);
+            } else {
+                printf("%c", currentChar);
+            }
+        }
+
+        printf("\n");
+    }
+}
+
+int main() {
+    char ciphertext[] = "G fmnc wms bgblr rpylqjyrc gr zw fylb. \
+                        rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. \
+                        sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj.";
+
+    int topPlaintexts;
+
+    printf("Enter the number of possible plaintexts to display: ");
+    scanf("%d", &topPlaintexts);
+
+    monoalphabeticSubstitutionAttack(ciphertext, topPlaintexts);
+
+    return 0;
+}
