@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <string.h>
+
+void decryptAdditiveCipher(char ciphertext[], int key) {
+    int length = strlen(ciphertext);
+
+    printf("Plaintext (with key=%d): ", key);
+
+    for (int i = 0; i < length; i++) {
+        char currentChar = ciphertext[i];
+
+        if (currentChar >= 'A' && currentChar <= 'Z') {
+            char decryptedChar = ((currentChar - 'A' - key + 26) % 26) + 'A';
+            printf("%c", decryptedChar);
+        } else if (currentChar >= 'a' && currentChar <= 'z') {
+            char decryptedChar = ((currentChar - 'a' - key + 26) % 26) + 'a';
+            printf("%c", decryptedChar);
+        } else {
+            printf("%c", currentChar);
+        }
+    }
+
+    printf("\n");
+}
+
+void letterFrequencyAttack(char ciphertext[], int topPlaintexts) {
+    int letterFrequency[26] = {0};
+
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        char currentChar = ciphertext[i];
+
+        if (currentChar >= 'A' && currentChar <= 'Z') {
+            letterFrequency[currentChar - 'A']++;
+        } else if (currentChar >= 'a' && currentChar <= 'z') {
+            letterFrequency[currentChar - 'a']++;
+        }
+    }
+
+    int maxFrequency = 0;
+    int maxFrequencyKey = 0;
+
+    for (int i = 0; i < 26; i++) {
+        if (letterFrequency[i] > maxFrequency) {
+            maxFrequency = letterFrequency[i];
+            maxFrequencyKey = i;
+        }
+    }
+
+    printf("Top %d possible plaintexts:\n", topPlaintexts);
+    for (int i = 0; i < topPlaintexts; i++) {
+        decryptAdditiveCipher(ciphertext, (maxFrequencyKey + i) % 26);
+    }
+}
+
+int main() {
+    char ciphertext[] = "K vkdnl, Qa htrjlxp ql 123!";
+    int topPlaintexts;
+
+    printf("Enter the number of possible plaintexts to display: ");
+    scanf("%d", &topPlaintexts);
+
+    letterFrequencyAttack(ciphertext, topPlaintexts);
+
+    return 0;
+}
