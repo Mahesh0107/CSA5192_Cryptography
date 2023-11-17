@@ -1,0 +1,22 @@
+def monoalphabetic_encrypt(text, key):
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    encrypted_text = ''.join(key[alphabet.index(c)]
+                             if c in alphabet
+                                else c
+                                    for c in text)
+    return encrypted_text
+
+def monoalphabetic_decrypt(encrypted_text, key):
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    decrypted_text = ''.join(alphabet[key.index(c)]
+                             if c in key
+                                else c
+                                   for c in encrypted_text)
+    return decrypted_text
+
+key = 'phqgiumeaylnofdxjkrcvstzwb'
+message = "hello world"
+encrypted_message = monoalphabetic_encrypt(message, key)
+print("Encrypted:", encrypted_message)
+decrypted_message = monoalphabetic_decrypt(encrypted_message, key)
+print("Decrypted:", decrypted_message)
