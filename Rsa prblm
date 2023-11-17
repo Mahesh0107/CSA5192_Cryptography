@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+
+// Function to generate RSA key pair
+void generateRSAKeyPair() {
+    RSA *keypair = RSA_new();
+    BIGNUM *e = BN_new();
+    
+    // Set the public exponent (e)
+    BN_set_word(e, RSA_F4);
+
+    // Generate key pair with modulus size 2048 bits
+    RSA_generate_key_ex(keypair, 2048, e, NULL);
+
+    // Save the public key
+    FILE *pubKeyFile = fopen("public_key.pem", "w");
+    PEM_write_RSAPublicKey(pubKeyFile, keypair);
+
+    // Save the private key
+    FILE *privKeyFile = fopen("private_key.pem", "w");
+    PEM_write_RSAPrivateKey(privKeyFile, keypair, NULL, NULL, 0, NULL, NULL);
+
+    // Free resources
+    RSA_free(keypair);
+    BN_free(e);
+
+    fclose(pubKeyFile);
+    fclose(privKeyFile);
+}
+
+int main() {
+    // Generate a new RSA key pair
+    generateRSAKeyPair();
+
+    printf("New RSA key pair generated.\n");
+
+    return 0;
+}
