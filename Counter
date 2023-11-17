@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdint.h>
+
+// S-DES key generation
+void generateSDESKey(uint16_t key, uint8_t *subkey1, uint8_t *subkey2);
+
+// S-DES encryption
+uint8_t sdesEncrypt(uint8_t plaintext, uint8_t subkey);
+
+// Counter mode encryption
+void counterModeEncrypt(uint16_t key, uint8_t *plaintext, int size);
+
+int main() {
+    uint16_t key = 0x1F5D;  // Binary: 01111 11101
+    uint8_t plaintext[] = {0x01, 0x02, 0x04};  // Binary: 0000 0001 0000 0010 0000 0100
+
+    printf("Plaintext: ");
+    for (int i = 0; i < sizeof(plaintext); i++) {
+        printf("%02x ", plaintext[i]);
+    }
+    printf("\n");
+
+    // Encrypt in counter mode
+    counterModeEncrypt(key, plaintext, sizeof(plaintext));
+
+    printf("Encrypted Text: ");
+    for (int i = 0; i < sizeof(plaintext); i++) {
+        printf("%02x ", plaintext[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
+void generateSDESKey(uint16_t key, uint8_t *subkey1, uint8_t *subkey2) {
+    // Implement S-DES key generation logic
+    // This function generates two 8-bit subkeys (subkey1 and subkey2) from a 10-bit key
+    // You need to implement this function based on the S-DES algorithm
+}
+
+uint8_t sdesEncrypt(uint8_t plaintext, uint8_t subkey) {
+    // Implement S-DES encryption logic
+    // This function encrypts a plaintext byte using a given 8-bit subkey
+    // You need to implement this function based on the S-DES algorithm
+}
+
+void counterModeEncrypt(uint16_t key, uint8_t *plaintext, int size) {
+    uint8_t subkey1, subkey2;
+    generateSDESKey(key, &subkey1, &subkey2);
+
+    for (int i = 0; i < size; i++) {
+        plaintext[i] ^= sdesEncrypt(i, subkey1);
+        // Increment counter or use i directly, depending on your implementation
+    }
+}
